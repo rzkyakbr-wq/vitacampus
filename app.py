@@ -280,7 +280,7 @@ if menu == "🏠 Dashboard":
                 showlegend=False
             )
             fig.update_traces(fillcolor="rgba(61,153,112,0.15)", line_width=2.5)
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
         # Tips dari log terakhir
         if data["logs"]:
@@ -412,14 +412,14 @@ elif menu == "📊 Analisis & Grafik":
                 plot_bgcolor="white", paper_bgcolor="white",
                 height=350
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
             # Distribusi skor
             fig2 = px.histogram(df, x="skor", nbins=10,
                                 color_discrete_sequence=["#3D9970"],
                                 title="Distribusi Skor Kesehatan")
             fig2.update_layout(plot_bgcolor="white", paper_bgcolor="white", height=250)
-            st.plotly_chart(fig2, use_container_width=True)
+            st.plotly_chart(fig2, width="stretch")
 
         with tab2:
             fig = make_subplots(rows=2, cols=1, subplot_titles=("Jam Tidur per Hari", "Konsumsi Air per Hari"))
@@ -430,7 +430,7 @@ elif menu == "📊 Analisis & Grafik":
                                   marker_color="#26c6da", name="Gelas Air"), row=2, col=1)
             fig.add_hline(y=8, line_dash="dot", line_color="orange", row=2, col=1)
             fig.update_layout(height=450, plot_bgcolor="white", paper_bgcolor="white", showlegend=False)
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
         with tab3:
             fig = make_subplots(rows=1, cols=2, subplot_titles=("Menit Olahraga", "Level Stres"))
@@ -440,7 +440,7 @@ elif menu == "📊 Analisis & Grafik":
                                       mode="lines+markers", line=dict(color="#ef5350", width=2),
                                       name="Stres"), row=1, col=2)
             fig.update_layout(height=320, plot_bgcolor="white", paper_bgcolor="white", showlegend=False)
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
             # Korelasi stres vs skor
             fig3 = px.scatter(df, x="level_stres", y="skor", trendline="ols",
@@ -448,7 +448,7 @@ elif menu == "📊 Analisis & Grafik":
                               title="Korelasi: Stres vs Skor Kesehatan",
                               labels={"level_stres": "Level Stres", "skor": "Skor Kesehatan"})
             fig3.update_layout(plot_bgcolor="white", paper_bgcolor="white", height=280)
-            st.plotly_chart(fig3, use_container_width=True)
+            st.plotly_chart(fig3, width="stretch")
 
         with tab4:
             fig = go.Figure()
@@ -458,7 +458,7 @@ elif menu == "📊 Analisis & Grafik":
             fig.update_layout(title="Jam Belajar per Hari", height=320,
                                plot_bgcolor="white", paper_bgcolor="white",
                                yaxis_title="Jam")
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
         # Ringkasan statistik
         st.markdown("---")
@@ -543,7 +543,7 @@ elif menu == "👤 Profil Saya":
                 }
             ))
             fig.update_layout(height=200, margin=dict(l=20, r=20, t=20, b=20))
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
 # ─────────────────────────────────────────────
 # HALAMAN: RIWAYAT LOG
