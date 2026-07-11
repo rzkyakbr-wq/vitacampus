@@ -1,0 +1,551 @@
+{
+  "profile": {
+    "nama": "Rizky Akbar Ardiansyah",
+    "nim": "4.33.25.2.20",
+    "prodi": "Teknologi Rekayasa Komputer",
+    "semester": 2,
+    "tb": 188,
+    "bb": 103,
+    "target_tidur": 7.0,
+    "target_air": 15,
+    "imt": 29.1,
+    "kat_imt": "Kelebihan Berat Badan"
+  },
+  "logs": [
+    {
+      "tanggal": "2026-05-31",
+      "jam_tidur": 7.6,
+      "kualitas_tidur": "Baik",
+      "minum_air": 4,
+      "makan_sehat": 3,
+      "skip_sarapan": false,
+      "menit_olahraga": 0,
+      "jenis_olahraga": [
+        "Gym",
+        "Jalan kaki"
+      ],
+      "level_stres": 5,
+      "suasana_hati": "\ud83d\ude15 Kurang Baik",
+      "jam_belajar": 2.0,
+      "catatan": "",
+      "skor": 62
+    },
+    {
+      "tanggal": "2026-06-01",
+      "jam_tidur": 5.1,
+      "kualitas_tidur": "Buruk",
+      "minum_air": 7,
+      "makan_sehat": 2,
+      "skip_sarapan": true,
+      "menit_olahraga": 30,
+      "jenis_olahraga": [
+        "Gym"
+      ],
+      "level_stres": 2,
+      "suasana_hati": "\ud83d\ude10 Netral",
+      "jam_belajar": 4.9,
+      "catatan": "",
+      "skor": 66
+    },
+    {
+      "tanggal": "2026-06-02",
+      "jam_tidur": 8.0,
+      "kualitas_tidur": "Biasa",
+      "minum_air": 6,
+      "makan_sehat": 4,
+      "skip_sarapan": true,
+      "menit_olahraga": 15,
+      "jenis_olahraga": [],
+      "level_stres": 6,
+      "suasana_hati": "\ud83d\ude15 Kurang Baik",
+      "jam_belajar": 2.1,
+      "catatan": "",
+      "skor": 75
+    },
+    {
+      "tanggal": "2026-06-03",
+      "jam_tidur": 6.4,
+      "kualitas_tidur": "Baik",
+      "minum_air": 9,
+      "makan_sehat": 5,
+      "skip_sarapan": false,
+      "menit_olahraga": 15,
+      "jenis_olahraga": [],
+      "level_stres": 2,
+      "suasana_hati": "\ud83d\ude10 Netral",
+      "jam_belajar": 6.1,
+      "catatan": "",
+      "skor": 75
+    },
+    {
+      "tanggal": "2026-06-04",
+      "jam_tidur": 8.5,
+      "kualitas_tidur": "Sangat Baik",
+      "minum_air": 9,
+      "makan_sehat": 5,
+      "skip_sarapan": false,
+      "menit_olahraga": 0,
+      "jenis_olahraga": [],
+      "level_stres": 3,
+      "suasana_hati": "\ud83d\ude42 Baik",
+      "jam_belajar": 1.3,
+      "catatan": "",
+      "skor": 68
+    },
+    {
+      "tanggal": "2026-06-05",
+      "jam_tidur": 6.5,
+      "kualitas_tidur": "Biasa",
+      "minum_air": 11,
+      "makan_sehat": 3,
+      "skip_sarapan": false,
+      "menit_olahraga": 0,
+      "jenis_olahraga": [
+        "Gym",
+        "Jalan kaki"
+      ],
+      "level_stres": 7,
+      "suasana_hati": "\ud83d\ude42 Baik",
+      "jam_belajar": 3.5,
+      "catatan": "",
+      "skor": 46
+    },
+    {
+      "tanggal": "2026-06-06",
+      "jam_tidur": 7.9,
+      "kualitas_tidur": "Sangat Baik",
+      "minum_air": 6,
+      "makan_sehat": 4,
+      "skip_sarapan": false,
+      "menit_olahraga": 30,
+      "jenis_olahraga": [
+        "Jalan kaki"
+      ],
+      "level_stres": 6,
+      "suasana_hati": "\ud83d\ude42 Baik",
+      "jam_belajar": 7.9,
+      "catatan": "",
+      "skor": 85
+    },
+    {
+      "tanggal": "2026-06-07",
+      "jam_tidur": 8.2,
+      "kualitas_tidur": "Biasa",
+      "minum_air": 10,
+      "makan_sehat": 3,
+      "skip_sarapan": true,
+      "menit_olahraga": 0,
+      "jenis_olahraga": [
+        "Lari",
+        "Gym"
+      ],
+      "level_stres": 5,
+      "suasana_hati": "\ud83d\ude15 Kurang Baik",
+      "jam_belajar": 7.4,
+      "catatan": "Hari ini lumayan produktif.",
+      "skor": 62
+    },
+    {
+      "tanggal": "2026-06-08",
+      "jam_tidur": 6.1,
+      "kualitas_tidur": "Buruk",
+      "minum_air": 7,
+      "makan_sehat": 5,
+      "skip_sarapan": false,
+      "menit_olahraga": 30,
+      "jenis_olahraga": [
+        "Lari"
+      ],
+      "level_stres": 6,
+      "suasana_hati": "\ud83d\ude42 Baik",
+      "jam_belajar": 6.2,
+      "catatan": "Hari ini lumayan produktif.",
+      "skor": 75
+    },
+    {
+      "tanggal": "2026-06-09",
+      "jam_tidur": 7.0,
+      "kualitas_tidur": "Sangat Baik",
+      "minum_air": 5,
+      "makan_sehat": 1,
+      "skip_sarapan": false,
+      "menit_olahraga": 60,
+      "jenis_olahraga": [
+        "Gym"
+      ],
+      "level_stres": 3,
+      "suasana_hati": "\ud83d\ude04 Sangat Baik",
+      "jam_belajar": 2.1,
+      "catatan": "Refreshing sebentar.",
+      "skor": 76
+    },
+    {
+      "tanggal": "2026-06-10",
+      "jam_tidur": 6.5,
+      "kualitas_tidur": "Baik",
+      "minum_air": 11,
+      "makan_sehat": 5,
+      "skip_sarapan": false,
+      "menit_olahraga": 15,
+      "jenis_olahraga": [
+        "Lari",
+        "Gym"
+      ],
+      "level_stres": 2,
+      "suasana_hati": "\ud83d\ude04 Sangat Baik",
+      "jam_belajar": 5.8,
+      "catatan": "Banyak tugas.",
+      "skor": 75
+    },
+    {
+      "tanggal": "2026-06-11",
+      "jam_tidur": 6.7,
+      "kualitas_tidur": "Sangat Baik",
+      "minum_air": 11,
+      "makan_sehat": 1,
+      "skip_sarapan": false,
+      "menit_olahraga": 45,
+      "jenis_olahraga": [],
+      "level_stres": 6,
+      "suasana_hati": "\ud83d\ude10 Netral",
+      "jam_belajar": 7.8,
+      "catatan": "",
+      "skor": 58
+    },
+    {
+      "tanggal": "2026-06-12",
+      "jam_tidur": 7.4,
+      "kualitas_tidur": "Baik",
+      "minum_air": 6,
+      "makan_sehat": 3,
+      "skip_sarapan": false,
+      "menit_olahraga": 60,
+      "jenis_olahraga": [
+        "Lari"
+      ],
+      "level_stres": 4,
+      "suasana_hati": "\ud83d\ude04 Sangat Baik",
+      "jam_belajar": 4.8,
+      "catatan": "",
+      "skor": 89
+    },
+    {
+      "tanggal": "2026-06-13",
+      "jam_tidur": 8.7,
+      "kualitas_tidur": "Baik",
+      "minum_air": 8,
+      "makan_sehat": 2,
+      "skip_sarapan": true,
+      "menit_olahraga": 0,
+      "jenis_olahraga": [
+        "Lari",
+        "Jalan kaki"
+      ],
+      "level_stres": 5,
+      "suasana_hati": "\ud83d\ude42 Baik",
+      "jam_belajar": 7.1,
+      "catatan": "Hari ini lumayan produktif.",
+      "skor": 54
+    },
+    {
+      "tanggal": "2026-06-14",
+      "jam_tidur": 7.6,
+      "kualitas_tidur": "Sangat Baik",
+      "minum_air": 12,
+      "makan_sehat": 2,
+      "skip_sarapan": false,
+      "menit_olahraga": 15,
+      "jenis_olahraga": [
+        "Lari"
+      ],
+      "level_stres": 8,
+      "suasana_hati": "\ud83d\ude10 Netral",
+      "jam_belajar": 7.8,
+      "catatan": "Refreshing sebentar.",
+      "skor": 61
+    },
+    {
+      "tanggal": "2026-06-15",
+      "jam_tidur": 8.6,
+      "kualitas_tidur": "Baik",
+      "minum_air": 11,
+      "makan_sehat": 1,
+      "skip_sarapan": false,
+      "menit_olahraga": 0,
+      "jenis_olahraga": [
+        "Jalan kaki",
+        "Gym"
+      ],
+      "level_stres": 5,
+      "suasana_hati": "\ud83d\ude04 Sangat Baik",
+      "jam_belajar": 1.4,
+      "catatan": "",
+      "skor": 46
+    },
+    {
+      "tanggal": "2026-06-16",
+      "jam_tidur": 7.8,
+      "kualitas_tidur": "Baik",
+      "minum_air": 4,
+      "makan_sehat": 2,
+      "skip_sarapan": false,
+      "menit_olahraga": 0,
+      "jenis_olahraga": [],
+      "level_stres": 2,
+      "suasana_hati": "\ud83d\ude10 Netral",
+      "jam_belajar": 7.0,
+      "catatan": "Refreshing sebentar.",
+      "skor": 61
+    },
+    {
+      "tanggal": "2026-06-17",
+      "jam_tidur": 5.9,
+      "kualitas_tidur": "Buruk",
+      "minum_air": 6,
+      "makan_sehat": 5,
+      "skip_sarapan": false,
+      "menit_olahraga": 30,
+      "jenis_olahraga": [],
+      "level_stres": 9,
+      "suasana_hati": "\ud83d\ude04 Sangat Baik",
+      "jam_belajar": 2.7,
+      "catatan": "",
+      "skor": 58
+    },
+    {
+      "tanggal": "2026-06-18",
+      "jam_tidur": 7.6,
+      "kualitas_tidur": "Baik",
+      "minum_air": 9,
+      "makan_sehat": 4,
+      "skip_sarapan": false,
+      "menit_olahraga": 30,
+      "jenis_olahraga": [
+        "Gym",
+        "Jalan kaki"
+      ],
+      "level_stres": 9,
+      "suasana_hati": "\ud83d\ude04 Sangat Baik",
+      "jam_belajar": 7.0,
+      "catatan": "Refreshing sebentar.",
+      "skor": 78
+    },
+    {
+      "tanggal": "2026-06-19",
+      "jam_tidur": 7.9,
+      "kualitas_tidur": "Sangat Baik",
+      "minum_air": 5,
+      "makan_sehat": 2,
+      "skip_sarapan": false,
+      "menit_olahraga": 0,
+      "jenis_olahraga": [],
+      "level_stres": 5,
+      "suasana_hati": "\ud83d\ude10 Netral",
+      "jam_belajar": 4.8,
+      "catatan": "Refreshing sebentar.",
+      "skor": 54
+    },
+    {
+      "tanggal": "2026-06-20",
+      "jam_tidur": 6.0,
+      "kualitas_tidur": "Baik",
+      "minum_air": 5,
+      "makan_sehat": 4,
+      "skip_sarapan": true,
+      "menit_olahraga": 60,
+      "jenis_olahraga": [],
+      "level_stres": 3,
+      "suasana_hati": "\ud83d\ude42 Baik",
+      "jam_belajar": 1.4,
+      "catatan": "Refreshing sebentar.",
+      "skor": 82
+    },
+    {
+      "tanggal": "2026-06-21",
+      "jam_tidur": 6.9,
+      "kualitas_tidur": "Buruk",
+      "minum_air": 7,
+      "makan_sehat": 4,
+      "skip_sarapan": false,
+      "menit_olahraga": 0,
+      "jenis_olahraga": [
+        "Lari"
+      ],
+      "level_stres": 4,
+      "suasana_hati": "\ud83d\ude15 Kurang Baik",
+      "jam_belajar": 3.7,
+      "catatan": "",
+      "skor": 55
+    },
+    {
+      "tanggal": "2026-06-22",
+      "jam_tidur": 7.6,
+      "kualitas_tidur": "Baik",
+      "minum_air": 11,
+      "makan_sehat": 2,
+      "skip_sarapan": false,
+      "menit_olahraga": 0,
+      "jenis_olahraga": [
+        "Gym",
+        "Jalan kaki"
+      ],
+      "level_stres": 6,
+      "suasana_hati": "\ud83d\ude10 Netral",
+      "jam_belajar": 2.5,
+      "catatan": "",
+      "skor": 51
+    },
+    {
+      "tanggal": "2026-06-23",
+      "jam_tidur": 5.2,
+      "kualitas_tidur": "Baik",
+      "minum_air": 11,
+      "makan_sehat": 5,
+      "skip_sarapan": true,
+      "menit_olahraga": 60,
+      "jenis_olahraga": [],
+      "level_stres": 4,
+      "suasana_hati": "\ud83d\ude04 Sangat Baik",
+      "jam_belajar": 1.4,
+      "catatan": "Hari ini lumayan produktif.",
+      "skor": 70
+    },
+    {
+      "tanggal": "2026-06-24",
+      "jam_tidur": 6.6,
+      "kualitas_tidur": "Buruk",
+      "minum_air": 7,
+      "makan_sehat": 5,
+      "skip_sarapan": false,
+      "menit_olahraga": 30,
+      "jenis_olahraga": [
+        "Gym",
+        "Lari"
+      ],
+      "level_stres": 2,
+      "suasana_hati": "\ud83d\ude10 Netral",
+      "jam_belajar": 5.3,
+      "catatan": "Hari ini lumayan produktif.",
+      "skor": 85
+    },
+    {
+      "tanggal": "2026-06-25",
+      "jam_tidur": 7.7,
+      "kualitas_tidur": "Biasa",
+      "minum_air": 9,
+      "makan_sehat": 2,
+      "skip_sarapan": false,
+      "menit_olahraga": 15,
+      "jenis_olahraga": [
+        "Jalan kaki"
+      ],
+      "level_stres": 8,
+      "suasana_hati": "\ud83d\ude04 Sangat Baik",
+      "jam_belajar": 1.9,
+      "catatan": "Refreshing sebentar.",
+      "skor": 61
+    },
+    {
+      "tanggal": "2026-06-26",
+      "jam_tidur": 7.5,
+      "kualitas_tidur": "Sangat Baik",
+      "minum_air": 5,
+      "makan_sehat": 1,
+      "skip_sarapan": false,
+      "menit_olahraga": 30,
+      "jenis_olahraga": [],
+      "level_stres": 5,
+      "suasana_hati": "\ud83d\ude42 Baik",
+      "jam_belajar": 4.5,
+      "catatan": "Banyak tugas.",
+      "skor": 70
+    },
+    {
+      "tanggal": "2026-06-27",
+      "jam_tidur": 6.1,
+      "kualitas_tidur": "Baik",
+      "minum_air": 11,
+      "makan_sehat": 5,
+      "skip_sarapan": false,
+      "menit_olahraga": 45,
+      "jenis_olahraga": [
+        "Lari",
+        "Jalan kaki"
+      ],
+      "level_stres": 6,
+      "suasana_hati": "\ud83d\ude42 Baik",
+      "jam_belajar": 5.3,
+      "catatan": "Banyak tugas.",
+      "skor": 75
+    },
+    {
+      "tanggal": "2026-06-28",
+      "jam_tidur": 5.5,
+      "kualitas_tidur": "Sangat Baik",
+      "minum_air": 5,
+      "makan_sehat": 5,
+      "skip_sarapan": false,
+      "menit_olahraga": 0,
+      "jenis_olahraga": [
+        "Jalan kaki"
+      ],
+      "level_stres": 6,
+      "suasana_hati": "\ud83d\ude10 Netral",
+      "jam_belajar": 3.0,
+      "catatan": "",
+      "skor": 40
+    },
+    {
+      "tanggal": "2026-06-29",
+      "jam_tidur": 7.0,
+      "kualitas_tidur": "Baik",
+      "minum_air": 4,
+      "makan_sehat": 1,
+      "skip_sarapan": true,
+      "menit_olahraga": 45,
+      "jenis_olahraga": [
+        "Jalan kaki"
+      ],
+      "level_stres": 8,
+      "suasana_hati": "\ud83d\ude10 Netral",
+      "jam_belajar": 6.8,
+      "catatan": "Hari ini lumayan produktif.",
+      "skor": 63
+    },
+    {
+      "tanggal": "2026-06-30",
+      "jam_tidur": 11.0,
+      "kualitas_tidur": "Baik",
+      "minum_air": 8,
+      "makan_sehat": 2,
+      "skip_sarapan": false,
+      "menit_olahraga": 30,
+      "jenis_olahraga": [
+        "Jalan kaki",
+        "Lari"
+      ],
+      "level_stres": 3,
+      "suasana_hati": "\ud83d\ude04 Sangat Baik",
+      "jam_belajar": 5.5,
+      "catatan": "hore",
+      "skor": 64
+    },
+    {
+      "tanggal": "2026-07-11",
+      "jam_tidur": 7.0,
+      "kualitas_tidur": "Baik",
+      "minum_air": 8,
+      "makan_sehat": 3,
+      "skip_sarapan": false,
+      "menit_olahraga": 30,
+      "jenis_olahraga": [
+        "Gym"
+      ],
+      "level_stres": 4,
+      "suasana_hati": "\ud83d\ude10 Netral",
+      "jam_belajar": 4.0,
+      "catatan": "okee",
+      "skor": 89
+    }
+  ]
+}
