@@ -1,11 +1,11 @@
 import streamlit as st
 import pandas as pd
-import json
 import hashlib
 from datetime import date, timedelta
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+from supabase import create_client, Client
 
 # ─────────────────────────────────────────────
 # KONFIGURASI HALAMAN
@@ -18,46 +18,32 @@ st.set_page_config(
 )
 
 # ─────────────────────────────────────────────
-# CSS — ADAPTIF DARK/LIGHT MODE
+# CSS
 # ─────────────────────────────────────────────
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@300;400;500&display=swap');
-
     html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
     h1, h2, h3 { font-family: 'Plus Jakarta Sans', sans-serif; }
 
-    /* ── METRIC CARD ── */
     .metric-card {
-        background: var(--background-color, white);
+        background: #1b4332;
         border-radius: 16px;
         padding: 20px 24px;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        box-shadow: 0 2px 12px rgba(0,0,0,0.15);
         border-left: 5px solid #3D9970;
         margin-bottom: 12px;
     }
-    .metric-card h3 {
-        margin: 0 0 4px 0;
-        font-size: 0.82rem; font-weight: 700;
-        text-transform: uppercase; letter-spacing: 0.06em;
-        color: #3D9970 !important;
-    }
-    .metric-card .value {
-        font-size: 2rem; font-weight: 800;
-        color: #3D9970 !important;
-    }
-    .metric-card .sub {
-        font-size: 0.8rem; margin-top: 2px;
-        color: #888 !important;
-    }
+    .metric-card h3 { margin: 0 0 4px 0; font-size: 0.82rem; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 0.06em; color: #95d5b2 !important; }
+    .metric-card .value { font-size: 2rem; font-weight: 800; color: #3D9970 !important; }
+    .metric-card .sub { font-size: 0.8rem; margin-top: 2px; color: #b7e4c7 !important; }
 
-    /* ── BADGE ── */
     .health-badge { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 0.78rem; font-weight: 700; }
-    .badge-green  { background: #d1fae5; color: #065f46 !important; }
-    .badge-yellow { background: #fef3c7; color: #92400e !important; }
-    .badge-red    { background: #fee2e2; color: #991b1b !important; }
+    .badge-green  { background: #1b4332; color: #95d5b2 !important; border: 1px solid #3D9970; }
+    .badge-yellow { background: #3d2c00; color: #ffd166 !important; border: 1px solid #ffd166; }
+    .badge-red    { background: #3d0000; color: #ff6b6b !important; border: 1px solid #ff6b6b; }
 
-    /* ── SECTION TITLE ── */
     .section-title {
         font-family: 'Plus Jakarta Sans', sans-serif;
         font-size: 1.2rem; font-weight: 700;
@@ -66,18 +52,15 @@ st.markdown("""
         border-bottom: 2px solid #3D9970;
     }
 
-    /* ── TIP BOX — works both light & dark ── */
     .tip-box {
         background: #1b4332;
         border: 1px solid #3D9970;
         border-radius: 12px;
-        padding: 14px 18px;
-        margin: 8px 0;
+        padding: 14px 18px; margin: 8px 0;
         color: #d8f3dc !important;
         font-size: 0.92rem;
     }
 
-    /* ── LOG ENTRY ── */
     .log-entry {
         background: #1b4332;
         border-radius: 10px;
@@ -85,29 +68,22 @@ st.markdown("""
         border-left: 4px solid #3D9970;
         color: #d8f3dc !important;
     }
-    .log-entry b   { color: #95d5b2 !important; }
+    .log-entry b { color: #95d5b2 !important; }
     .log-entry small { color: #b7e4c7 !important; }
 
-    /* ── SIDEBAR ── */
     div[data-testid="stSidebar"] {
         background: linear-gradient(160deg, #1b4332 0%, #2d6a4f 100%) !important;
     }
     div[data-testid="stSidebar"] * { color: #d8f3dc !important; }
-    div[data-testid="stSidebar"] hr { border-color: #3D9970 !important; }
 
-    /* ── BUTTON ── */
     .stButton > button {
         background: linear-gradient(135deg, #3D9970, #2d6a4f) !important;
         color: white !important; border: none !important;
         border-radius: 10px; padding: 10px 28px;
         font-weight: 700; transition: all 0.2s;
     }
-    .stButton > button:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 6px 20px rgba(61,153,112,0.4) !important;
-    }
+    .stButton > button:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(61,153,112,0.4) !important; }
 
-    /* ── USER CHIP ── */
     .user-chip {
         background: rgba(255,255,255,0.15);
         border-radius: 999px; padding: 5px 14px;
@@ -115,94 +91,109 @@ st.markdown("""
         color: #d8f3dc !important;
     }
 
-    /* ── AUTH FORM LABEL (always readable) ── */
-    .stTextInput label, .stNumberInput label,
-    .stSlider label, .stSelectbox label,
-    .stMultiSelect label, .stCheckbox label,
-    .stRadio label, .stDateInput label,
-    .stTextArea label, .stSelectSlider label {
-        color: inherit !important;
-        font-weight: 500;
-    }
-
-    /* ── FORM WRAPPER ── */
-    .stForm {
-        border: 1px solid #3D9970 !important;
-        border-radius: 14px !important;
-        padding: 8px !important;
-    }
+    .stForm { border: 1px solid #3D9970 !important; border-radius: 14px !important; padding: 8px !important; }
 </style>
 """, unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────
-# DATABASE — pakai st.session_state sebagai
-# in-memory store (persists selama session)
-# + simpan ke file jika bisa (lokal)
+# KONEKSI SUPABASE
 # ─────────────────────────────────────────────
-import os
+@st.cache_resource
+def init_supabase() -> Client:
+    url  = st.secrets["SUPABASE_URL"]
+    key  = st.secrets["SUPABASE_KEY"]
+    return create_client(url, key)
 
-DB_FILE = "users_db.json"
+supabase = init_supabase()
 
-def load_db():
-    # Prioritas: session_state cache dulu
-    if "db_cache" in st.session_state:
-        return st.session_state.db_cache
-    # Kalau ada file lokal, baca
-    if os.path.exists(DB_FILE):
-        with open(DB_FILE, "r") as f:
-            db = json.load(f)
-        st.session_state.db_cache = db
-        return db
-    st.session_state.db_cache = {}
-    return {}
-
-def save_db(db):
-    st.session_state.db_cache = db
-    try:
-        with open(DB_FILE, "w") as f:
-            json.dump(db, f, indent=2, default=str)
-    except Exception:
-        pass  # Di cloud, file write mungkin gagal — tidak apa-apa
-
-def hash_pw(pw):
+# ─────────────────────────────────────────────
+# DATABASE FUNCTIONS
+# ─────────────────────────────────────────────
+def hash_pw(pw: str) -> str:
     return hashlib.sha256(pw.encode()).hexdigest()
 
 def register_user(username, password, profil):
-    db = load_db()
-    if username.lower() in [k.lower() for k in db.keys()]:
-        return False, "Username sudah dipakai, coba yang lain!"
-    db[username] = {"password": hash_pw(password), "profil": profil, "logs": []}
-    save_db(db)
-    return True, "Akun berhasil dibuat!"
+    # cek username sudah ada
+    existing = supabase.table("users").select("username").eq("username", username.lower()).execute()
+    if existing.data:
+        return False, "Username sudah dipakai!"
+    try:
+        supabase.table("users").insert({
+            "username":     username.lower(),
+            "password_hash": hash_pw(password),
+            "nama":         profil["nama"],
+            "nim":          profil["nim"],
+            "prodi":        profil["prodi"],
+            "semester":     profil["semester"],
+            "tinggi_badan": profil["tb"],
+            "berat_badan":  profil["bb"],
+            "target_tidur": profil["target_tidur"],
+            "target_air":   profil["target_air"],
+            "imt":          profil["imt"],
+            "kat_imt":      profil["kat_imt"],
+        }).execute()
+        return True, "Akun berhasil dibuat!"
+    except Exception as e:
+        return False, f"Error: {str(e)}"
 
 def login_user(username, password):
-    db = load_db()
-    # Case-insensitive username match
-    matched_key = None
-    for k in db.keys():
-        if k.lower() == username.lower():
-            matched_key = k
-            break
-    if matched_key is None:
+    res = supabase.table("users").select("*").eq("username", username.lower()).execute()
+    if not res.data:
         return False, "Username tidak ditemukan!"
-    if db[matched_key]["password"] != hash_pw(password):
+    user = res.data[0]
+    if user["password_hash"] != hash_pw(password):
         return False, "Password salah!"
-    return True, matched_key  # return actual key
+    return True, user
 
-def get_user(username):
-    db = load_db()
-    return db.get(username, {})
+def get_profil(username):
+    res = supabase.table("users").select("*").eq("username", username).execute()
+    return res.data[0] if res.data else {}
 
-def save_user(username, data):
-    db = load_db()
-    db[username] = data
-    save_db(db)
+def update_profil(username, profil):
+    supabase.table("users").update({
+        "nama":         profil["nama"],
+        "nim":          profil["nim"],
+        "prodi":        profil["prodi"],
+        "semester":     profil["semester"],
+        "tinggi_badan": profil["tb"],
+        "berat_badan":  profil["bb"],
+        "target_tidur": profil["target_tidur"],
+        "target_air":   profil["target_air"],
+        "imt":          profil["imt"],
+        "kat_imt":      profil["kat_imt"],
+    }).eq("username", username).execute()
+
+def get_logs(username):
+    res = supabase.table("health_logs").select("*").eq("username", username).order("tanggal").execute()
+    return res.data or []
+
+def save_log(username, log):
+    # upsert berdasarkan username + tanggal
+    supabase.table("health_logs").upsert({
+        "username":       username,
+        "tanggal":        log["tanggal"],
+        "jam_tidur":      log["jam_tidur"],
+        "kualitas_tidur": log["kualitas_tidur"],
+        "minum_air":      log["minum_air"],
+        "makan_sehat":    log["makan_sehat"],
+        "skip_sarapan":   log["skip_sarapan"],
+        "menit_olahraga": log["menit_olahraga"],
+        "jenis_olahraga": str(log["jenis_olahraga"]),
+        "level_stres":    log["level_stres"],
+        "suasana_hati":   log["suasana_hati"],
+        "jam_belajar":    log["jam_belajar"],
+        "catatan":        log["catatan"],
+        "skor":           log["skor"],
+    }, on_conflict="username,tanggal").execute()
+
+def delete_logs(username):
+    supabase.table("health_logs").delete().eq("username", username).execute()
 
 # ─────────────────────────────────────────────
-# SESSION STATE INIT
+# SESSION STATE
 # ─────────────────────────────────────────────
-if "logged_in"  not in st.session_state: st.session_state.logged_in  = False
-if "username"   not in st.session_state: st.session_state.username   = ""
+if "logged_in" not in st.session_state: st.session_state.logged_in = False
+if "username"  not in st.session_state: st.session_state.username  = ""
 
 # ─────────────────────────────────────────────
 # FUNGSI KESEHATAN
@@ -224,11 +215,11 @@ def label_skor(s):
 
 def tips_kesehatan(log):
     tips = []
-    if log.get("jam_tidur", 8) < 7:    tips.append("😴 Tidurmu kurang dari 7 jam — coba tidur lebih awal!")
-    if log.get("minum_air", 8) < 8:    tips.append("💧 Minum airmu kurang — targetkan 8 gelas per hari.")
-    if log.get("menit_olahraga",0)<30:  tips.append("🏃 Olahraga minimal 30 menit — jalan kaki ke kampus pun bisa!")
-    if log.get("level_stres", 0) >= 7:  tips.append("🧘 Stresmu tinggi — coba teknik pernapasan 4-7-8.")
-    if log.get("makan_sehat", 0) < 2:   tips.append("🥗 Tambahkan sayur/buah ke makan harianmu.")
+    if log.get("jam_tidur", 8) < 7:     tips.append("😴 Tidurmu kurang dari 7 jam — coba tidur lebih awal!")
+    if log.get("minum_air", 8) < 8:     tips.append("💧 Minum airmu kurang — targetkan 8 gelas per hari.")
+    if log.get("menit_olahraga",0) < 30: tips.append("🏃 Olahraga minimal 30 menit — jalan kaki ke kampus pun bisa!")
+    if log.get("level_stres", 0) >= 7:   tips.append("🧘 Stresmu tinggi — coba teknik pernapasan 4-7-8.")
+    if log.get("makan_sehat", 0) < 2:    tips.append("🥗 Tambahkan sayur/buah ke makan harianmu.")
     if not tips: tips.append("✅ Hari ini luar biasa! Pertahankan pola hidupmu.")
     return tips
 
@@ -237,6 +228,8 @@ def get_df(logs):
     df = pd.DataFrame(logs)
     df["tanggal"] = pd.to_datetime(df["tanggal"])
     return df.sort_values("tanggal")
+
+LAYOUT = dict(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)", font=dict(color="#3D9970"))
 
 # ─────────────────────────────────────────────
 # HALAMAN LOGIN / REGISTER
@@ -251,9 +244,8 @@ if not st.session_state.logged_in:
 
         tab_login, tab_reg = st.tabs(["🔐 Login", "📝 Daftar Akun Baru"])
 
-        # ── LOGIN ──
         with tab_login:
-            st.markdown("### Masuk ke Akunmu")
+            st.markdown("### Selamat Datang Kembali!")
             with st.form("form_login"):
                 un = st.text_input("Username", placeholder="Masukkan username-mu")
                 pw = st.text_input("Password", type="password", placeholder="Masukkan password-mu")
@@ -261,22 +253,22 @@ if not st.session_state.logged_in:
                     if not un or not pw:
                         st.error("Username dan password wajib diisi!")
                     else:
-                        ok, result = login_user(un, pw)
+                        with st.spinner("Memverifikasi..."):
+                            ok, result = login_user(un, pw)
                         if ok:
                             st.session_state.logged_in = True
-                            st.session_state.username  = result  # actual key
+                            st.session_state.username  = result["username"]
                             st.success("✅ Login berhasil!")
                             st.rerun()
                         else:
                             st.error(f"❌ {result}")
 
-        # ── REGISTER ──
         with tab_reg:
             st.markdown("### Buat Akun Baru")
             with st.form("form_register"):
                 st.markdown("**🔑 Data Akun**")
                 c1, c2 = st.columns(2)
-                with c1: reg_un = st.text_input("Username*", placeholder="Buat username unik")
+                with c1: reg_un = st.text_input("Username*", placeholder="Min. 3 karakter")
                 with c2: reg_pw = st.text_input("Password*", type="password", placeholder="Min. 6 karakter")
 
                 st.markdown("**👤 Data Diri**")
@@ -301,9 +293,8 @@ if not st.session_state.logged_in:
                         st.error("Username minimal 3 karakter!")
                     else:
                         imt     = reg_bb / ((reg_tb/100)**2)
-                        kat_imt = ("Kurang Berat Badan" if imt<18.5 else
-                                   "Normal" if imt<25 else
-                                   "Kelebihan Berat Badan" if imt<30 else "Obesitas")
+                        kat_imt = ("Kurang Berat Badan" if imt<18.5 else "Normal" if imt<25
+                                   else "Kelebihan Berat Badan" if imt<30 else "Obesitas")
                         profil  = {
                             "nama": reg_nama, "nim": reg_nim,
                             "prodi": reg_prodi, "semester": int(reg_semester),
@@ -312,22 +303,21 @@ if not st.session_state.logged_in:
                             "target_air": int(reg_target_air),
                             "imt": round(imt,1), "kat_imt": kat_imt
                         }
-                        ok, msg = register_user(reg_un, reg_pw, profil)
+                        with st.spinner("Membuat akun..."):
+                            ok, msg = register_user(reg_un, reg_pw, profil)
                         if ok:
-                            st.success(f"✅ {msg} Silakan login di tab Login!")
+                            st.success(f"✅ {msg} Silakan login!")
                         else:
                             st.error(f"❌ {msg}")
 
 # ─────────────────────────────────────────────
-# HALAMAN UTAMA (SETELAH LOGIN)
+# HALAMAN UTAMA
 # ─────────────────────────────────────────────
 else:
-    username  = st.session_state.username
-    user_data = get_user(username)
-    profil    = user_data.get("profil", {})
-    logs      = user_data.get("logs", [])
+    username = st.session_state.username
+    profil   = get_profil(username)
+    logs     = get_logs(username)
 
-    # SIDEBAR
     with st.sidebar:
         st.markdown("## 🌿 VitaCampus")
         st.markdown(f'<div class="user-chip">👤 {profil.get("nama", username).split()[0]}</div>', unsafe_allow_html=True)
@@ -357,7 +347,6 @@ else:
             df["skor"] = df.apply(hitung_skor, axis=1)
             cutoff = date.today() - timedelta(days=30)
             df30   = df[df["tanggal"].dt.date >= cutoff]
-
             skor_rata = int(df30["skor"].mean()) if not df30.empty else 0
             lbl, badge = label_skor(skor_rata)
 
@@ -381,14 +370,12 @@ else:
 
             st.markdown("---")
             st.markdown('<div class="section-title">📈 Tren Skor 30 Hari Terakhir</div>', unsafe_allow_html=True)
-            fig = px.area(df30, x="tanggal", y="skor", color_discrete_sequence=["#3D9970"],
-                          labels={"skor":"Skor","tanggal":"Tanggal"})
-            fig.update_layout(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
-                              margin=dict(l=10,r=10,t=10,b=10), height=220,
-                              yaxis=dict(range=[0,100]), showlegend=False,
-                              font=dict(color="#3D9970"))
-            fig.update_traces(fillcolor="rgba(61,153,112,0.2)", line_width=2.5)
-            st.plotly_chart(fig, width="stretch")
+            if not df30.empty:
+                fig = px.area(df30, x="tanggal", y="skor", color_discrete_sequence=["#3D9970"])
+                fig.update_layout(margin=dict(l=10,r=10,t=10,b=10), height=220,
+                                  yaxis=dict(range=[0,100]), showlegend=False, **LAYOUT)
+                fig.update_traces(fillcolor="rgba(61,153,112,0.2)", line_width=2.5)
+                st.plotly_chart(fig, width="stretch")
 
             if logs:
                 st.markdown('<div class="section-title">💡 Tips Hari Ini</div>', unsafe_allow_html=True)
@@ -435,10 +422,8 @@ else:
                     "jam_belajar": jam_belajar, "catatan": catatan,
                 }
                 log_baru["skor"] = hitung_skor(log_baru)
-                user_data["logs"] = [l for l in logs if l["tanggal"] != str(tgl)]
-                user_data["logs"].append(log_baru)
-                save_user(username, user_data)
-                logs = user_data["logs"]
+                with st.spinner("Menyimpan..."):
+                    save_log(username, log_baru)
                 lbl, _ = label_skor(log_baru["skor"])
                 st.success(f"✅ Tersimpan! Skor: **{log_baru['skor']}/100** — {lbl}")
                 for tip in tips_kesehatan(log_baru):
@@ -462,9 +447,6 @@ else:
             st.markdown(f"Menampilkan **{len(df)} hari** data")
             st.markdown("---")
 
-            LAYOUT = dict(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
-                          font=dict(color="#3D9970"))
-
             tab1,tab2,tab3,tab4 = st.tabs(["⭐ Skor","😴 Tidur & Air","🏃 Olahraga & Stres","🧠 Produktivitas"])
 
             with tab1:
@@ -473,8 +455,7 @@ else:
                 fig.add_hline(y=75, line_dash="dash", line_color="#95d5b2", annotation_text="Target (75)")
                 fig.update_layout(title="Skor Harian", yaxis=dict(range=[0,100]), height=340, **LAYOUT)
                 st.plotly_chart(fig, width="stretch")
-                fig2 = px.histogram(df, x="skor", nbins=10, color_discrete_sequence=["#3D9970"],
-                                    title="Distribusi Skor")
+                fig2 = px.histogram(df, x="skor", nbins=10, color_discrete_sequence=["#3D9970"], title="Distribusi Skor")
                 fig2.update_layout(height=240, **LAYOUT)
                 st.plotly_chart(fig2, width="stretch")
 
@@ -498,8 +479,7 @@ else:
             with tab4:
                 fig = go.Figure(go.Scatter(x=df["tanggal"],y=df["jam_belajar"],fill="tozeroy",
                     fillcolor="rgba(61,153,112,0.2)", line=dict(color="#3D9970",width=2)))
-                fig.update_layout(title="Jam Belajar per Hari", height=320,
-                                  yaxis_title="Jam", **LAYOUT)
+                fig.update_layout(title="Jam Belajar per Hari", height=320, yaxis_title="Jam", **LAYOUT)
                 st.plotly_chart(fig, width="stretch")
 
             st.markdown("---")
@@ -520,25 +500,24 @@ else:
                 prodi    = st.text_input("Program Studi",value=profil.get("prodi",""))
                 semester = st.number_input("Semester", 1, 14, value=int(profil.get("semester",1)))
             with c2:
-                tb            = st.number_input("Tinggi Badan (cm)", 140, 220, value=int(profil.get("tb",165)))
-                bb            = st.number_input("Berat Badan (kg)",  30,  150, value=int(profil.get("bb",60)))
-                target_tidur  = st.slider("Target Jam Tidur/Hari", 6.0, 10.0,
-                                          value=float(profil.get("target_tidur",8.0)), step=0.5)
-                target_air    = st.slider("Target Gelas Air/Hari", 4, 15,
-                                          value=int(profil.get("target_air",8)))
+                tb           = st.number_input("Tinggi Badan (cm)", 140, 220, value=int(profil.get("tinggi_badan",165)))
+                bb           = st.number_input("Berat Badan (kg)",  30,  150, value=int(profil.get("berat_badan",60)))
+                target_tidur = st.slider("Target Jam Tidur/Hari", 6.0, 10.0,
+                                         value=float(profil.get("target_tidur",8.0)), step=0.5)
+                target_air   = st.slider("Target Gelas Air/Hari", 4, 15,
+                                         value=int(profil.get("target_air",8)))
 
             if st.form_submit_button("💾 Simpan", use_container_width=True):
                 imt     = bb/((tb/100)**2)
-                kat_imt = ("Kurang Berat Badan" if imt<18.5 else
-                           "Normal" if imt<25 else
-                           "Kelebihan Berat Badan" if imt<30 else "Obesitas")
-                user_data["profil"] = {
-                    "nama":nama,"nim":nim,"prodi":prodi,"semester":int(semester),
-                    "tb":int(tb),"bb":int(bb),
-                    "target_tidur":target_tidur,"target_air":int(target_air),
-                    "imt":round(imt,1),"kat_imt":kat_imt
-                }
-                save_user(username, user_data)
+                kat_imt = ("Kurang Berat Badan" if imt<18.5 else "Normal" if imt<25
+                           else "Kelebihan Berat Badan" if imt<30 else "Obesitas")
+                with st.spinner("Menyimpan..."):
+                    update_profil(username, {
+                        "nama":nama,"nim":nim,"prodi":prodi,"semester":int(semester),
+                        "tb":int(tb),"bb":int(bb),
+                        "target_tidur":target_tidur,"target_air":int(target_air),
+                        "imt":round(imt,1),"kat_imt":kat_imt
+                    })
                 st.success("✅ Profil diperbarui!")
                 st.rerun()
 
@@ -557,12 +536,13 @@ else:
                     mode="gauge+number", value=profil["imt"],
                     domain={"x":[0,1],"y":[0,1]},
                     gauge={"axis":{"range":[10,40]},"bar":{"color":"#3D9970"},
-                           "steps":[{"range":[10,18.5],"color":"#90caf9"},
-                                    {"range":[18.5,25],"color":"#a5d6a7"},
-                                    {"range":[25,30],"color":"#fff176"},
-                                    {"range":[30,40],"color":"#ef9a9a"}]}))
+                           "steps":[{"range":[10,18.5],"color":"#1a3a5c"},
+                                    {"range":[18.5,25],"color":"#1b4332"},
+                                    {"range":[25,30],"color":"#3d2c00"},
+                                    {"range":[30,40],"color":"#3d0000"}]}))
                 fig.update_layout(height=200, margin=dict(l=20,r=20,t=20,b=20),
-                                  paper_bgcolor="rgba(0,0,0,0)")
+                                  paper_bgcolor="rgba(0,0,0,0)",
+                                  font=dict(color="#3D9970"))
                 st.plotly_chart(fig, width="stretch")
 
     # ── RIWAYAT LOG ──
@@ -598,6 +578,6 @@ else:
             if st.button("🗑️ Hapus Semua Data Saya"):
                 st.warning("Yakin ingin menghapus semua log kesehatanmu?")
                 if st.button("✅ Ya, Hapus", key="del"):
-                    user_data["logs"] = []
-                    save_user(username, user_data)
+                    with st.spinner("Menghapus..."):
+                        delete_logs(username)
                     st.rerun()
