@@ -252,6 +252,20 @@ def render_foto(foto_b64, css_class="foto-profil", placeholder_text="👤"):
     else:
         st.markdown(f'<div class="foto-placeholder" style="width:{"120" if css_class=="foto-profil" else "64"}px;height:{"120" if css_class=="foto-profil" else "64"}px">{placeholder_text}</div>', unsafe_allow_html=True)
 
+
+def compress_foto(file_bytes, max_size=400, quality=70):
+    """Resize & kompres foto sebelum disimpan sebagai base64.
+    Foto profil tidak perlu resolusi tinggi -> bikin upload & load jadi cepat."""
+    from PIL import Image
+    from io import BytesIO
+    img = Image.open(BytesIO(file_bytes))
+    if img.mode != "RGB":
+        img = img.convert("RGB")
+    img.thumbnail((max_size, max_size), Image.LANCZOS)
+    buf = BytesIO()
+    img.save(buf, format="JPEG", quality=quality, optimize=True)
+    return base64.b64encode(buf.getvalue()).decode("utf-8")
+
 LAYOUT = dict(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)", font=dict(color="#3D9970"))
 
 # ══════════════════════════════════════════
@@ -555,18 +569,21 @@ else:
                                             help="Format JPG/PNG, maks 2MB")
             if foto_upload:
                 foto_bytes  = foto_upload.read()
-                foto_base64_new = base64.b64encode(foto_bytes).decode("utf-8")
-                with st.spinner("Menyimpan foto..."):
-                    update_profil(username, {
-                        "nama": profil.get("nama",""), "nim": profil.get("nim",""),
-                        "prodi": profil.get("prodi",""), "semester": int(profil.get("semester",1)),
-                        "tb": int(profil.get("tinggi_badan",165)), "bb": int(profil.get("berat_badan",60)),
-                        "target_tidur": float(profil.get("target_tidur",8.0)),
-                        "target_air": int(profil.get("target_air",8)),
-                        "imt": float(profil.get("imt",0)), "kat_imt": profil.get("kat_imt",""),
-                    }, foto_base64_new)
-                st.success("✅ Foto diperbarui!")
-                st.rerun()
+                try:
+                    with st.spinner("Mengompres & menyimpan foto..."):
+                        foto_base64_new = compress_foto(foto_bytes)
+                        update_profil(username, {
+                            "nama": profil.get("nama",""), "nim": profil.get("nim",""),
+                            "prodi": profil.get("prodi",""), "semester": int(profil.get("semester",1)),
+                            "tb": int(profil.get("tinggi_badan",165)), "bb": int(profil.get("berat_badan",60)),
+                            "target_tidur": float(profil.get("target_tidur",8.0)),
+                            "target_air": int(profil.get("target_air",8)),
+                            "imt": float(profil.get("imt",0)), "kat_imt": profil.get("kat_imt",""),
+                        }, foto_base64_new)
+                    st.success("✅ Foto diperbarui!")
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"❌ Gagal menyimpan foto: {e}. Coba lagi atau pakai foto dengan ukuran lebih kecil.")
 
         with col_info:
             if profil.get("imt"):
