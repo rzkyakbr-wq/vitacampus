@@ -8,6 +8,8 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 from supabase import create_client, Client
 
+import admin  # ← file terpisah untuk panel admin
+
 st.set_page_config(
     page_title="VitaCampus – Health Tracker Mahasiswa",
     page_icon="🌿",
@@ -208,6 +210,9 @@ def delete_logs(username):
 # ─── SESSION STATE ───
 if "logged_in" not in st.session_state: st.session_state.logged_in = False
 if "username"  not in st.session_state: st.session_state.username  = ""
+if "admin_logged_in"  not in st.session_state: st.session_state.admin_logged_in  = False
+if "admin_username"   not in st.session_state: st.session_state.admin_username   = ""
+if "show_admin_login" not in st.session_state: st.session_state.show_admin_login = False
 
 # ─── HELPER KESEHATAN ───
 def hitung_skor(log):
@@ -252,7 +257,22 @@ LAYOUT = dict(plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)", font=
 # ══════════════════════════════════════════
 # HALAMAN LOGIN / REGISTER
 # ══════════════════════════════════════════
-if not st.session_state.logged_in:
+if st.session_state.admin_logged_in:
+    admin.render_admin_panel()
+
+elif not st.session_state.logged_in:
+    # ── Tombol Admin di pojok kanan atas ──
+    col_spacer, col_admin_btn = st.columns([6, 1])
+    with col_admin_btn:
+        if st.button("🔑 Admin", use_container_width=True, key="btn_admin_toggle"):
+            st.session_state.show_admin_login = not st.session_state.show_admin_login
+
+    if st.session_state.show_admin_login:
+        _, col_admin_form, _ = st.columns([1, 1.4, 1])
+        with col_admin_form:
+            admin.admin_login_form()
+        st.markdown("---")
+
     st.markdown("<br>", unsafe_allow_html=True)
     _, col_m, _ = st.columns([1, 1.4, 1])
     with col_m:
