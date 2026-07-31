@@ -172,6 +172,7 @@ def login_user(username, password):
     if u["password_hash"] != hash_pw(password): return False, "Password salah!"
     return True, u
 
+@st.cache_data(ttl=15, show_spinner=False)
 def get_profil(username):
     res = supabase.table("users").select("*").eq("username", username).execute()
     return res.data[0] if res.data else {}
@@ -186,7 +187,9 @@ def update_profil(username, profil, foto_base64=None):
     }
     if foto_base64: data["foto"] = foto_base64
     supabase.table("users").update(data).eq("username", username).execute()
+    get_profil.clear()  # hapus cache lama biar data baru langsung terbaca
 
+@st.cache_data(ttl=15, show_spinner=False)
 def get_logs(username):
     res = supabase.table("health_logs").select("*").eq("username", username).order("tanggal").execute()
     return res.data or []
@@ -203,9 +206,11 @@ def save_log(username, log):
         "catatan": log["catatan"].replace("<","&lt;").replace(">","&gt;"),
         "skor": log["skor"],
     }, on_conflict="username,tanggal").execute()
+    get_logs.clear()
 
 def delete_logs(username):
     supabase.table("health_logs").delete().eq("username", username).execute()
+    get_logs.clear()
 
 # ─── SESSION STATE ───
 if "logged_in" not in st.session_state: st.session_state.logged_in = False
